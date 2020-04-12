@@ -1,0 +1,9 @@
+# .sync.yml
+---
+Gemfile:
+  optional:
+    ':development':
+      - gem: 'puppet-resource_api'
+      - gem: 'faraday-cookie_jar'
+spec/spec_helper.rb:
+  mock_with: ':rspec'
