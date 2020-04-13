@@ -11,7 +11,7 @@ This module provides types, providers and tasks to interact with a DellEMC Unity
     - [Beginning with puppet_unity](#beginning-with-puppet_unity)
   - [Usage](#usage)
     - [Desired state management](#desired-state-management)
-      - [resource: job](#resource-job)
+      - [resource: unity_job](#resource-unity_job)
       - [example](#example)
     - [Tasks and plans](#tasks-and-plans)
       - [task: list_jobs](#task-list_jobs)
@@ -76,16 +76,16 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
 ### Desired state management
 
-#### resource: job
+#### resource: unity_job
 This resource corresponds to the job object in Unisphere.
 #### example
 
   ```shell
-  puppet device --resource job --target vsa --deviceconfig devices.conf --verbose
+  puppet device --resource unity_job --target vsa --deviceconfig devices.conf --verbose
   ```
   ```puppet
   ...
-  job { 'N-6':
+  unity_job { 'N-6':
     description => 'Modify NTP Server',
     state => 5,
     progress_pct => 0,
@@ -143,7 +143,7 @@ Finished on 192.168.1.219:
 
 ## Limitations
 
-* Only reading of the job instances and the task `list_jobs` are implemented.
+* Only reading of the unity_job instances and the task `list_jobs` are implemented.
 * The type and module names most probably need to be improved
 
 ## Development

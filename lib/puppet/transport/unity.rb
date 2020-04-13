@@ -27,6 +27,7 @@ module Puppet::Transport
         # page 44: Connecting and authenticating
         conn.request :basic_auth, connection_info[:user], connection_info[:password].unwrap
         # conn.response :logger, nil, headers: true, bodies: true, log_level: :debug
+        conn.use Faraday::Response::RaiseError
         conn.adapter Faraday.default_adapter
       end
     end
@@ -40,13 +41,16 @@ module Puppet::Transport
              end
       result = @connection.get(path, args)
       JSON.parse(result.body)['entries']
+    rescue Faraday::ClientError => e
+      raise Puppet::ResourceError, "Client error response received from Unity: #{e.inspect}\n#{e.full_message}"
+    rescue Faraday::ServerError => e
+      raise "Server error response received from Unity: #{e.inspect}\n#{e.full_message}"
     rescue JSON::ParserError => e
-      raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e}"
+      raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
 
-    def jobs
-      fields = ['id', 'description', 'state', 'progressPct', 'parametersOut', 'messageOut', 'clientData', 'affectedResource']
-      unity_get('types/job/instances', fields: fields.join(','))
+    def unity_get_instances(type, fields=['id'])
+      unity_get("types/#{type}/instances", fields: fields.join(','))
     end
 
     # @summary

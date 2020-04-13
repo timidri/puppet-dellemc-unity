@@ -4,24 +4,19 @@ require 'puppet/resource_api/simple_provider'
 require 'pry'
 
 # Implementation for the job type using the Resource API.
-class Puppet::Provider::Job::Job < Puppet::ResourceApi::SimpleProvider
+class Puppet::Provider::UnityJob::UnityJob < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting jobs')
-    jobs = context.transport.jobs
+    jobs = context.transport.unity_get_instances('job', context.type.attributes.values.map { |v| v[:field_name] } )
     instances = []
     return instances if jobs.nil?
 
     jobs.each do |job|
-      job = job['content']
-      instances << {
-        id:                 job['id'],
-        description:        job['description'],
-        state:              job['state'],
-        progress_pct:       job['progressPct'],
-        message_out:        job['messageOut'],
-        affected_resource:  job['affectedResource'],
-        client_data:        job['clientData'],
-      }
+      instance = {}
+      context.type.attributes.each do |k, v|
+        instance[k] = job['content'][v[:field_name]]
+      end
+      instances << instance
     end
 
     instances
