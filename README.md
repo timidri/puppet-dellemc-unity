@@ -34,14 +34,16 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
     ```json
     {
-      "port": 443,
       "host": "my.unisphere.host.or.ip",
       "user": "admin",
       "password": "MySecretPassword123!"
     }
     ```
 
-1. Create a device configuration file `devices.conf`
+    Note that it is also possible to specify the `port` but it's `443` by default.
+
+
+2. Create a device configuration file `devices.conf` like so:
 
     ```ini
     [vsa]
@@ -49,13 +51,18 @@ This module contains a number of useful types, providers, tasks and plans to aut
     url file:///absolute/path/to/vsa.conf
     ```
 
-1. The bolt tasks need `faraday-cookie_jar` gem to be available in the bolt gem path to enable cookie handling during authenticated communication with the Unisphere API. Install the gem as follows:
-
+3. The module needs the `faraday-cookie_jar` gem to function. Install the gem:
     ```shell
-    sudo /opt/puppetlabs/bolt/bin/gem install faraday-cookie_jar --no-ri --no-rdoc 
+    sudo /opt/puppetlabs/puppet/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
     ```
 
-1. Create a Bolt inventory file to tell Bolt where the Unisphere API lives:
+4. The bolt tasks need `faraday-cookie_jar` gem to be available in the bolt gem path to enable cookie handling during authenticated communication with the Unisphere API. Install the gem as follows:
+
+    ```shell
+    sudo /opt/puppetlabs/bolt/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
+    ```
+
+5. Create a Bolt inventory file to tell Bolt where the Unisphere API lives:
 
     ```yaml
     version: 2
@@ -140,6 +147,7 @@ Finished on 192.168.1.219:
 ...
 ```
 
+Please note that property names of the Puppet resource types are not necessarily equal to the property names of Unity objects. Puppet resource type properties need to be lowercase, so they are converted from CamelCase-d Unity properties like this: `messageOut => message_out`. Note that the tasks use Unity property names.
 
 ## Limitations
 
