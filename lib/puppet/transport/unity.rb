@@ -26,6 +26,7 @@ module Puppet::Transport
         # see https://www.dellemc.com/en-us/collaterals/unauth/technical-guides-support-information/products/storage/docu69331.pdf
         # page 44: Connecting and authenticating
         conn.request :basic_auth, connection_info[:user], connection_info[:password].unwrap
+        # Uncomment the following line for logging
         # conn.response :logger, nil, headers: true, bodies: true, log_level: :debug
         conn.use Faraday::Response::RaiseError
         conn.adapter Faraday.default_adapter
