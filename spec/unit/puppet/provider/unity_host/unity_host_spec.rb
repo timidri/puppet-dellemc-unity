@@ -2,29 +2,29 @@
 
 require 'spec_helper'
 
-ensure_module_defined('Puppet::Provider::Job')
-require 'puppet/provider/job/job'
+ensure_module_defined('Puppet::Provider::UnityHost')
+require 'puppet/provider/unity_host/unity_host'
 
-RSpec.describe Puppet::Provider::Job::Job do
+RSpec.describe Puppet::Provider::UnityHost::UnityHost do
   subject(:provider) { described_class.new }
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
 
-  describe '#get' do
-    it 'processes resources' do
-      expect(context).to receive(:debug).with('Returning pre-canned example data')
-      expect(provider.get(context)).to eq [
-        {
-          name: 'foo',
-          ensure: 'present',
-        },
-        {
-          name: 'bar',
-          ensure: 'present',
-        },
-      ]
-    end
-  end
+  # describe '#get' do
+  #   it 'processes resources' do
+  #     expect(context).to receive(:debug).with('Returning pre-canned example data')
+  #     expect(provider.get(context)).to eq [
+  #       {
+  #         name: 'foo',
+  #         ensure: 'present',
+  #       },
+  #       {
+  #         name: 'bar',
+  #         ensure: 'present',
+  #       },
+  #     ]
+  #   end
+  # end
 
   describe 'create(context, name, should)' do
     it 'creates the resource' do
