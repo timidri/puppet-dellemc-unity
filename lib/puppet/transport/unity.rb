@@ -3,7 +3,7 @@ require 'faraday_middleware'
 require 'faraday-cookie_jar'
 require 'uri'
 require 'json'
-# require 'pry'
+require 'pry'
 
 module Puppet::Transport
   # The main connection class to a Device endpoint
@@ -56,8 +56,15 @@ module Puppet::Transport
     # @summary
     #   Returns device's facts
     def facts(_context)
-      #TODO add facts from /api/types/basicSystemInfo/instances
-      { 'operatingsystem' => 'dellemc_unity' }
+      system_info = unity_get_instances('basicSystemInfo')[0]['content']
+      { 
+        operatingsystem:      'dellemc_unity',
+        model:                system_info['model'],
+        name:                 system_info['name'],
+        software_version:     system_info['softwareVersion'],
+        api_version:          system_info['apiVersion'],
+        earliest_api_version: system_info['earliestApiVersion'],
+      }
     end
 
     def verify(context)
