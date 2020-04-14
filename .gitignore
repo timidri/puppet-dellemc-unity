@@ -25,3 +25,5 @@
 .project
 .envrc
 /inventory.yaml
+vsa.conf
+devices.conf
