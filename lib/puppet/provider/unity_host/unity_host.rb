@@ -6,7 +6,7 @@ require 'puppet/resource_api/simple_provider'
 class Puppet::Provider::UnityHost::UnityHost < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting jobs')
-    hosts = context.transport.unity_get_instances('host', context.type.attributes.values.map { |v| v[:field_name] } )
+    hosts = context.transport.unity_get_instances('host', context.type.attributes.values.map { |v| v[:field_name] })
     instances = []
     return instances if hosts.nil?
 
@@ -20,7 +20,6 @@ class Puppet::Provider::UnityHost::UnityHost < Puppet::ResourceApi::SimpleProvid
 
     instances
   end
-
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")

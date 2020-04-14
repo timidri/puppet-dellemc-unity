@@ -9,7 +9,7 @@ module Puppet::Transport
   # The main connection class to a Device endpoint
   class Unity
     def initialize(_context, connection_info)
-      #TODO Add additional validation for connection_info
+      # TODO: Add additional validation for connection_info
       port = connection_info[:port].nil? ? 443 : connection_info[:port]
       Puppet.debug "Trying to connect to #{connection_info[:host]}:#{port} as user #{connection_info[:user]}"
       @connection = Faraday.new(
@@ -21,7 +21,7 @@ module Puppet::Transport
       ) do |conn|
         conn.use FaradayMiddleware::FollowRedirects, limit: 10
         conn.use :cookie_jar
-        # TODO the authentication header only needs to be sent in the first request
+        # TODO: the authentication header only needs to be sent in the first request
         # subsequent requests are authenticated using the persistent cookie returned from the first request
         # see https://www.dellemc.com/en-us/collaterals/unauth/technical-guides-support-information/products/storage/docu69331.pdf
         # page 44: Connecting and authenticating
@@ -49,7 +49,7 @@ module Puppet::Transport
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
 
-    def unity_get_instances(type, fields=['id'])
+    def unity_get_instances(type, fields = ['id'])
       unity_get("types/#{type}/instances", fields: fields.join(','))
     end
 
@@ -57,7 +57,7 @@ module Puppet::Transport
     #   Returns device's facts
     def facts(_context)
       system_info = unity_get_instances('basicSystemInfo')[0]['content']
-      { 
+      {
         operatingsystem:      'dellemc_unity',
         model:                system_info['model'],
         name:                 system_info['name'],
@@ -71,7 +71,7 @@ module Puppet::Transport
       # Test that transport can talk to the remote target
     end
 
-    def close(context)
+    def close(_context)
       # Close connection, free up resources
       @connection.close
     end

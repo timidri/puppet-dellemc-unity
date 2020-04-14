@@ -1,21 +1,20 @@
-# puppet_unity
+# dellemc_unity
 
 This module provides types, providers and tasks to interact with a DellEMC Unity system via its Unisphere API.
 
 #### Table of Contents
 
-- [puppet_unity](#puppet_unity)
+- [dellemc_unity](#dellemc_unity)
       - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Setup](#setup)
-    - [Beginning with puppet_unity](#beginning-with-puppet_unity)
+    - [Beginning with dellemc_unity](#beginning-with-dellemc_unity)
   - [Usage](#usage)
-    - [Desired state management](#desired-state-management)
-      - [resource: unity_job](#resource-unity_job)
-      - [example](#example)
+    - [Resource Types](#resource-types)
+      - [unity_job](#unity_job)
+      - [unity_host](#unity_host)
     - [Tasks and plans](#tasks-and-plans)
       - [task: list_jobs](#task-list_jobs)
-      - [usage example](#usage-example)
   - [Limitations](#limitations)
   - [Development](#development)
   - [Release Notes/Contributors/Etc. **Optional**](#release-notescontributorsetc-optional)
@@ -26,8 +25,7 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
 ## Setup
 
-
-### Beginning with puppet_unity
+### Beginning with dellemc_unity
 
 1. Install the module
 1. Create a file `vsa.conf` (name is arbitrary) containing credentials of the Unisphere API host:
@@ -42,8 +40,7 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
     Note that it is also possible to specify the `port` but it's `443` by default.
 
-
-2. Create a device configuration file `devices.conf` like so:
+1. Create a device configuration file `devices.conf` like so:
 
     ```ini
     [vsa]
@@ -51,18 +48,19 @@ This module contains a number of useful types, providers, tasks and plans to aut
     url file:///absolute/path/to/vsa.conf
     ```
 
-3. The module needs the `faraday-cookie_jar` gem to function. Install the gem:
+1. The module needs the `faraday-cookie_jar` gem to function. Install the gem:
+
     ```shell
     sudo /opt/puppetlabs/puppet/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
     ```
 
-4. The bolt tasks need `faraday-cookie_jar` gem to be available in the bolt gem path to enable cookie handling during authenticated communication with the Unisphere API. Install the gem as follows:
+1. The bolt tasks need `faraday-cookie_jar` gem to be available in the bolt gem path to enable cookie handling during authenticated communication with the Unisphere API. Install the gem as follows:
 
     ```shell
     sudo /opt/puppetlabs/bolt/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
     ```
 
-5. Create a Bolt inventory file to tell Bolt where the Unisphere API lives:
+1. Create a Bolt inventory file to tell Bolt where the Unisphere API lives:
 
     ```yaml
     version: 2
@@ -81,15 +79,19 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
 ## Usage
 
-### Desired state management
+### Resource Types
 
-#### resource: unity_job
-This resource corresponds to the job object in Unisphere.
-#### example
+#### unity_job
+
+This resource corresponds to the job resource in Unisphere.
+
+<!-- omit in toc -->
+##### example
 
   ```shell
   puppet device --resource unity_job --target vsa --deviceconfig devices.conf --verbose
   ```
+
   ```puppet
   ...
   unity_job { 'N-6':
@@ -111,14 +113,45 @@ This resource corresponds to the job object in Unisphere.
 ...
 ```
 
+#### unity_host
+
+This resource corresponds to the host resource in Unisphere.
+
+<!-- omit in toc -->
+##### example
+
+  ```shell
+  puppet device --resource unity_host --target vsa --deviceconfig devices.conf --verbose
+  ```
+
+  ```puppet
+  ...
+  unity_host { 'Host_1':
+    description => 'test host 1',
+    health => {
+      'value' => 5,
+      'descriptionIds' => ['ALRT_COMPONENT_OK'],
+      'descriptions' => ['The component is operating normally. No action is required.']
+    },
+    type => 1,
+    os_type => 'Linux',
+  }
+...
+```
+
 ### Tasks and plans
 
 #### task: list_jobs
+
 Lists all the jobs in the system.
-#### usage example
+
+<!-- omit in toc -->
+##### usage example
+
 ```shell
 bolt task run unity::list_jobs -t unity --inventoryfile inventory.yaml
 ```
+
 ```shell
 Started on 192.168.1.219...
 Finished on 192.168.1.219:
@@ -151,8 +184,8 @@ Please note that property names of the Puppet resource types are not necessarily
 
 ## Limitations
 
-* Only reading of the unity_job instances and the task `list_jobs` are implemented.
-* The type and module names most probably need to be improved
+- Only reading of the unity_job instances and the task `list_jobs` are implemented.
+- The type and module names most probably need to be improved
 
 ## Development
 
@@ -160,4 +193,4 @@ In the Development section, tell other users the ground rules for contributing t
 
 ## Release Notes/Contributors/Etc. **Optional**
 
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+If you aren't using change log, put your release notes here (though you should consider using change log). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.

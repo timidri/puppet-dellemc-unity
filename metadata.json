@@ -1,5 +1,5 @@
 {
-  "name": "puppet-unity",
+  "name": "puppet-dellemc_unity",
   "version": "0.1.0",
   "author": "Dimitri Tischenko",
   "summary": "Types, providers, tasks and plans for DellEMC Unity",

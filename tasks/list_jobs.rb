@@ -9,8 +9,7 @@ begin
   # we are loading the type here and use the :field_name attribute
   # to determine which fields we want to request from the API
   attributes = Puppet::Type.type(:unity_job).context.type.attributes
-  result['jobs'] = task.transport.unity_get_instances('job', attributes.values.map { |v| v[:field_name] } )
-
+  result['jobs'] = task.transport.unity_get_instances('job', attributes.values.map { |v| v[:field_name] })
 rescue Exception => e # rubocop:disable Lint/RescueException
   result[:_error] = { msg: e.message,
                       kind: 'timidri-unity/unknown',
