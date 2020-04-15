@@ -42,10 +42,9 @@ module Puppet::Transport
              end
       result = @connection.get(path, args)
       JSON.parse(result.body)['entries']
-    rescue Faraday::ClientError => e
-      raise Puppet::ResourceError, "Client error response received from Unity: #{e.inspect}\n#{e.full_message}"
-    rescue Faraday::ServerError => e
-      raise "Server error response received from Unity: #{e.inspect}\n#{e.full_message}"
+    rescue Faraday::Error => e
+      # binding.pry
+      raise Puppet::ResourceError, "Unity error: #{e.to_s}, message: \"#{JSON.parse(e.response[:body])['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     rescue JSON::ParserError => e
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
