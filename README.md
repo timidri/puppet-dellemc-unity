@@ -48,18 +48,6 @@ This module contains a number of useful types, providers, tasks and plans to aut
     url file:///absolute/path/to/vsa.conf
     ```
 
-1. The module needs the `faraday-cookie_jar` gem to function. Install the gem:
-
-    ```shell
-    sudo /opt/puppetlabs/puppet/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
-    ```
-
-1. The bolt tasks need `faraday-cookie_jar` gem to be available in the bolt gem path to enable cookie handling during authenticated communication with the Unisphere API. Install the gem as follows:
-
-    ```shell
-    sudo /opt/puppetlabs/bolt/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
-    ```
-
 1. Create a Bolt inventory file to tell Bolt where the Unisphere API lives:
 
     ```yaml

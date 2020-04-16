@@ -1,9 +1,10 @@
-require 'faraday'
-require 'faraday_middleware'
-require 'faraday-cookie_jar'
+# require 'faraday'
+# require 'faraday_middleware'
+# require 'faraday-cookie_jar'
 require 'uri'
 require 'json'
-require 'pry'
+require 'rest-client'
+# require 'pry'
 
 module Puppet::Transport
   # The main connection class to a Device endpoint
@@ -12,25 +13,16 @@ module Puppet::Transport
       # TODO: Add additional validation for connection_info
       port = connection_info[:port].nil? ? 443 : connection_info[:port]
       Puppet.debug "Trying to connect to #{connection_info[:host]}:#{port} as user #{connection_info[:user]}"
-      @connection = Faraday.new(
-        url: "https://#{connection_info[:host]}:#{port}/api",
-        headers: {
-          'X-EMC-REST-CLIENT' => 'true',
-        },
-        ssl: { verify: false },
-      ) do |conn|
-        conn.use FaradayMiddleware::FollowRedirects, limit: 10
-        conn.use :cookie_jar
-        # TODO: the authentication header only needs to be sent in the first request
-        # subsequent requests are authenticated using the persistent cookie returned from the first request
-        # see https://www.dellemc.com/en-us/collaterals/unauth/technical-guides-support-information/products/storage/docu69331.pdf
-        # page 44: Connecting and authenticating
-        conn.request :basic_auth, connection_info[:user], connection_info[:password].unwrap
-        # Uncomment the following line for logging
-        # conn.response :logger, nil, headers: true, bodies: true, log_level: :debug
-        conn.use Faraday::Response::RaiseError
-        conn.adapter Faraday.default_adapter
-      end
+      # TODO: the authentication header only needs to be sent in the first request
+      # subsequent requests are authenticated using the persistent cookie returned from the first request
+      # see https://www.dellemc.com/en-us/collaterals/unauth/technical-guides-support-information/products/storage/docu69331.pdf
+      # page 44: Connecting and authenticating
+      @api = RestClient::Resource.new("https://#{connection_info[:host]}:#{port}/api", 
+        :user       => connection_info[:user], 
+        :password   => connection_info[:password].unwrap, 
+        :headers    => { 'X-EMC-REST-CLIENT' => 'true' },
+        :verify_ssl =>  OpenSSL::SSL::VERIFY_NONE)
+      RestClient.log = STDOUT if Puppet.debug
     end
 
     def unity_get(path, args = nil)
@@ -40,11 +32,10 @@ module Puppet::Transport
              else
                args.merge(compact: true)
              end
-      result = @connection.get(path, args)
+      result = @api[path].get params:args
       JSON.parse(result.body)['entries']
-    rescue Faraday::Error => e
-      # binding.pry
-      raise Puppet::ResourceError, "Unity error: #{e.to_s}, message: \"#{JSON.parse(e.response[:body])['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
+    rescue RestClient::ExceptionWithResponse => e
+      raise Puppet::ResourceError, "Unity error: #{e.to_s}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     rescue JSON::ParserError => e
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
