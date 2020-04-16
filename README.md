@@ -65,6 +65,18 @@ This module contains a number of useful types, providers, tasks and plans to aut
 
     Note that it is also possible to specify the `port` but it's `443` by default.
 
+1. The module needs the `rest-client` gem to function. Install the gem:
+
+    ```shell
+    sudo /opt/puppetlabs/puppet/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
+    ```
+
+1. The bolt tasks also need the `rest-client` gem to be available in the bolt gem path to for the tasks to function. Install the gem:
+
+    ```shell
+    sudo /opt/puppetlabs/bolt/bin/gem install faraday-cookie_jar --no-ri --no-rdoc
+    ```
+
 ## Usage
 
 ### Resource Types
