@@ -2,8 +2,8 @@
 ---
 Gemfile:
   optional:
-    ':development':
-      - gem: 'puppet-resource_api'
-      - gem: 'faraday-cookie_jar'
+    ":development":
+      - gem: "puppet-resource_api"
+      - gem: "rest-client"
 spec/spec_helper.rb:
-  mock_with: ':rspec'
+  mock_with: ":rspec"
