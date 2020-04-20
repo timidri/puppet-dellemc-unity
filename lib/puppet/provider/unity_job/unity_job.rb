@@ -7,7 +7,7 @@ require 'pry'
 class Puppet::Provider::UnityJob::UnityJob < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting jobs')
-    jobs = context.transport.unity_get_instances('job', context.type.attributes.values.map { |v| v[:field_name] })
+    jobs = context.transport.unity_get_collection('job', context.type.attributes.values.map { |v| v[:field_name] })
     instances = []
     return instances if jobs.nil?
 

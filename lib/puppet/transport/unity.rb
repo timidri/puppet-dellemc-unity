@@ -1,6 +1,3 @@
-# require 'faraday'
-# require 'faraday_middleware'
-# require 'faraday-cookie_jar'
 require 'uri'
 require 'json'
 require 'rest-client'
@@ -17,11 +14,11 @@ module Puppet::Transport
       # subsequent requests are authenticated using the persistent cookie returned from the first request
       # see https://www.dellemc.com/en-us/collaterals/unauth/technical-guides-support-information/products/storage/docu69331.pdf
       # page 44: Connecting and authenticating
-      @api = RestClient::Resource.new("https://#{connection_info[:host]}:#{port}/api", 
-        :user       => connection_info[:user], 
-        :password   => connection_info[:password].unwrap, 
-        :headers    => { 'X-EMC-REST-CLIENT' => 'true' },
-        :verify_ssl =>  OpenSSL::SSL::VERIFY_NONE)
+      @api = RestClient::Resource.new("https://#{connection_info[:host]}:#{port}/api",
+                                      user:       connection_info[:user],
+                                      password:   connection_info[:password].unwrap,
+                                      headers:    { 'X-EMC-REST-CLIENT' => 'true' },
+                                      verify_ssl: OpenSSL::SSL::VERIFY_NONE)
       RestClient.log = STDOUT if Puppet.debug
     end
 
@@ -32,15 +29,15 @@ module Puppet::Transport
              else
                args.merge(compact: true)
              end
-      result = @api[path].get params:args
+      result = @api[path].get params: args
       JSON.parse(result.body)['entries']
     rescue RestClient::ExceptionWithResponse => e
-      raise Puppet::ResourceError, "Unity error: #{e.to_s}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
+      raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     rescue JSON::ParserError => e
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
 
-    def unity_get_instances(type, fields = ['id'])
+    def unity_get_collection(type, fields = ['id'])
       unity_get("types/#{type}/instances", fields: fields.join(','))
     end
 

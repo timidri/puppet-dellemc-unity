@@ -2,18 +2,18 @@
 
 require 'puppet/resource_api/simple_provider'
 
-# Implementation for the unity_host type using the Resource API.
-class Puppet::Provider::UnityHost::UnityHost < Puppet::ResourceApi::SimpleProvider
+# Implementation for the unity_lun type using the Resource API.
+class Puppet::Provider::UnityLun::UnityLun < Puppet::ResourceApi::SimpleProvider
   def get(context)
-    context.debug('getting jobs')
-    hosts = context.transport.unity_get_collection('host', context.type.attributes.values.map { |v| v[:field_name] })
+    context.debug('getting luns')
+    luns = context.transport.unity_get_collection('lun', context.type.attributes.values.map { |v| v[:field_name] })
     instances = []
-    return instances if hosts.nil?
+    return instances if luns.nil?
 
-    hosts.each do |host|
+    luns.each do |lun|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = host['content'][v[:field_name]]
+        instance[k] = lun['content'][v[:field_name]]
       end
       instances << instance
     end

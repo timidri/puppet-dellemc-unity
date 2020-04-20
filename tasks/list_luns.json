@@ -1,0 +1,13 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "remote": true,
+  "description": "List Unity luns",
+  "parameters": {},
+  "files": [
+    "unity/lib/puppet/util/task_helper.rb",
+    "unity/lib/puppet/transport/unity.rb",
+    "unity/lib/puppet/transport/schema/unity.rb",
+    "unity/lib/puppet/type/unity_lun.rb"
+  ]
+}
