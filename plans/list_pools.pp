@@ -1,8 +1,8 @@
 plan dellemc_unity::list_pools(
-  TargetSpec $target = 'unity'
+  TargetSpec $targets
   ) {
-  $result = run_task('dellemc_unity::list_pools', $target).first
-  $rows = $result.value['pools'].map | $r | {
+  $pools = run_task('dellemc_unity::list_pools', $targets).first.value['pools']
+  $rows = $pools.map | $r | {
     [
       $r['content']['id'],
       $r['content']['name'],
