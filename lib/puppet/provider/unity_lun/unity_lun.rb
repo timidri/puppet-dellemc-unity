@@ -6,7 +6,7 @@ require 'puppet/resource_api/simple_provider'
 class Puppet::Provider::UnityLun::UnityLun < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting luns')
-    luns = context.transport.unity_get_collection('lun', context.type.attributes.values.map { |v| v[:field_name] })
+    luns = context.transport.get_luns
     instances = []
     return instances if luns.nil?
 

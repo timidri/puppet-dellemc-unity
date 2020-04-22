@@ -31,7 +31,7 @@ EOS
       field_name: 'name',
     },
     description: {
-      type:       'String',
+      type:       'Optional[String]',
       desc:       'The lun description',
       field_name: 'description',
     },

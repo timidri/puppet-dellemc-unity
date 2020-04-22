@@ -1,0 +1,30 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "remote": true,
+  "description": "Create a Unity LUN",
+  "parameters": {
+    "name": {
+      "description": "Name of the LUN",
+      "type": "String[1]"
+    },
+    "pool_id": {
+      "description": "Id of the pool to create the LUN on",
+      "type": "String[1]"
+    },
+    "size": {
+      "description": "Size of the LUN in bytes",
+      "type": "Integer"
+    },
+    "is_thin_enabled": {
+      "description": "Whether thin provisioning is enabled",
+      "type": "Optional[Boolean]"
+    }
+  },
+  "files": [
+    "unity/lib/puppet/util/task_helper.rb",
+    "unity/lib/puppet/transport/unity.rb",
+    "unity/lib/puppet/transport/schema/unity.rb",
+    "unity/lib/puppet/type/unity_lun.rb"
+  ]
+}
