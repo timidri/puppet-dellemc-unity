@@ -6,13 +6,13 @@ result = {}
 
 begin
   Puppet.debug = true
-  task.params['is_thin_enabled'] = true if not task.params['is_thin_enabled']
+  task.params['is_thin_enabled'] = true unless task.params['is_thin_enabled']
 
   result['response'] = task.transport.create_lun(
     task.params['name'],
     task.params['pool_id'],
     task.params['size'],
-    task.params['is_thin_enabled']
+    task.params['is_thin_enabled'],
   )
 rescue Exception => e # rubocop:disable Lint/RescueException
   result[:_error] = { msg: e.message,
@@ -20,8 +20,7 @@ rescue Exception => e # rubocop:disable Lint/RescueException
                       details: {
                         class: e.class.to_s,
                         backtrace: e.backtrace,
-                      } 
-                    }
+                      } }
 end
 
 puts result.to_json
