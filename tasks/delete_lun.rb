@@ -11,8 +11,7 @@ rescue Exception => e # rubocop:disable Lint/RescueException
                       details: {
                         class: e.class.to_s,
                         backtrace: e.backtrace,
-                      } 
-                    }
+                      } }
 end
 
 puts result.to_json
