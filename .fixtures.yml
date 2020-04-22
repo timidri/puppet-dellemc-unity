@@ -3,4 +3,7 @@
 ---
 fixtures:
   forge_modules:
-#     stdlib: "puppetlabs/stdlib"
+    #     stdlib: "puppetlabs/stdlib"
+    format:
+      repo: "puppet/format"
+      ref: "0.1.1-rc0"

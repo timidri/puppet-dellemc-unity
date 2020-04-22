@@ -4,8 +4,13 @@
   "author": "Dimitri Tischenko",
   "summary": "Types, providers, tasks and plans for DellEMC Unity",
   "license": "Apache-2.0",
-  "source": "",
-  "dependencies": [],
+  "source": "https://github.com/timidri/puppet-dellemc-unity.git",
+  "dependencies": [
+    {
+      "name": "puppet/format",
+      "version_requirement": ">=0.0.1-rc0 < 2.0.0"
+    }
+  ],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
