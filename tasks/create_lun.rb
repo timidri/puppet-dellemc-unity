@@ -6,6 +6,7 @@ result = {}
 
 begin
   Puppet.debug = true
+  # exit_code = 0
   task.params['is_thin_enabled'] = true unless task.params['is_thin_enabled']
 
   result['response'] = task.transport.create_lun(

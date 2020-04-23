@@ -4,7 +4,7 @@ task = Puppet::Util::TaskHelper.new('unity')
 result = {}
 
 begin
-  result['pools'] = task.transport.get_pools
+  result['pools'] = task.transport.unity_get_collection('pool')
 rescue Exception => e # rubocop:disable Lint/RescueException
   result[:_error] = { msg: e.message,
                       kind: 'timidri-unity/unknown',

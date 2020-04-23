@@ -5,7 +5,7 @@ result = {}
 
 begin
   # Puppet.debug = true
-  result['luns'] = task.transport.get_luns
+  result['luns'] = task.transport.unity_get_collection('lun')
 rescue Exception => e # rubocop:disable Lint/RescueException
   result[:_error] = { msg: e.message,
                       kind: 'timidri-unity/unknown',
