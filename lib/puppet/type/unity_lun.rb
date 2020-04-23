@@ -50,5 +50,10 @@ EOS
       desc:       'The total size of the lun',
       field_name: 'sizeTotal',
     },
+    is_thin_enabled: {
+      type:       'Boolean',
+      desc:       'The total size of the lun',
+      field_name: 'isThinEnabled',
+    },
   },
 )
