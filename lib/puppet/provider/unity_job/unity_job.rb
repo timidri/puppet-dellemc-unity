@@ -7,14 +7,14 @@ require 'pry'
 class Puppet::Provider::UnityJob::UnityJob < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting jobs')
-    jobs = context.transport.unity_get_collection('job', context.type.attributes.values.map { |v| v[:field_name] })
+    jobs = context.transport.unity_get_collection('job')
     instances = []
     return instances if jobs.nil?
 
     jobs.each do |job|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = job['content'][v[:field_name]]
+        instance[k] = job[v[:field_name]]
       end
       instances << instance
     end

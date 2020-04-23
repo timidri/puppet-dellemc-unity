@@ -6,14 +6,14 @@ require 'puppet/resource_api/simple_provider'
 class Puppet::Provider::UnityPool::UnityPool < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting storage pools')
-    hosts = context.transport.unity_get_collection('pool', context.type.attributes.values.map { |v| v[:field_name] })
+    pools = context.transport.unity_get_collection('pool')
     instances = []
-    return instances if hosts.nil?
+    return instances if pools.nil?
 
-    hosts.each do |host|
+    pools.each do |pool|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = host['content'][v[:field_name]]
+        instance[k] = pool[v[:field_name]]
       end
       instances << instance
     end

@@ -6,14 +6,13 @@ require 'puppet/resource_api/simple_provider'
 class Puppet::Provider::UnityLun::UnityLun < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting luns')
-    luns = context.transport.get_luns
+    luns = context.transport.unity_get_collection('lun')
     instances = []
     return instances if luns.nil?
-
     luns.each do |lun|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = lun['content'][v[:field_name]]
+        instance[k] = lun[v[:field_name]]
       end
       instances << instance
     end

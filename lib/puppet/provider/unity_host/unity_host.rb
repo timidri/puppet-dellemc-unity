@@ -6,14 +6,14 @@ require 'puppet/resource_api/simple_provider'
 class Puppet::Provider::UnityHost::UnityHost < Puppet::ResourceApi::SimpleProvider
   def get(context)
     context.debug('getting jobs')
-    hosts = context.transport.unity_get_collection('host', context.type.attributes.values.map { |v| v[:field_name] })
+    hosts = context.transport.unity_get_collection('host')
     instances = []
     return instances if hosts.nil?
 
     hosts.each do |host|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = host['content'][v[:field_name]]
+        instance[k] = host[v[:field_name]]
       end
       instances << instance
     end

@@ -67,23 +67,10 @@ module Puppet::Transport
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
 
-    def unity_get_collection(type, fields = ['id'])
-      unity_get("types/#{type}/instances", fields: fields.join(','))
+    def unity_get_collection(type, fields = fields_for_type(type))
+      unity_get("types/#{type}/instances", fields: fields.join(',')).map { |item| item['content'] }
     end
 
-    def get_pools
-      unity_get_collection('pool', fields_for_type('pool'))
-    end
-
-    def get_luns
-      unity_get_collection('lun', fields_for_type('lun'))
-      # binding.pry
-    end
-
-    def get_jobs
-      unity_get_collection('job', fields_for_type('job'))
-    end
-    
     def create_lun(name, pool_id, size, is_thin_enabled)
       unity_post('types/storageResource/action/createLun', {
         "lunParameters": {
