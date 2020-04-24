@@ -2,7 +2,7 @@ plan dellemc_unity::create_lun(
   TargetSpec        $targets,
   String[1]         $name,
   Optional[String]  $pool_id = undef,
-  Pattern[/[0-9]+[MGT]i?[Bb]$/, /[0-9]+$/] $size,
+  Pattern[/[0-9]+[MGT]i?[Bb]?$/, /[0-9]+$/] $size,
   Optional[Boolean] $is_thin_enabled = true,
   ) {
     if $pool_id {
@@ -23,14 +23,15 @@ plan dellemc_unity::create_lun(
     is_thin_enabled => $is_thin_enabled,
   })
 
-  debug($result)
-
   if ! $result.ok {
     Error(
-      message    => "Sorry, this plan does not work yet.",
+      message    => 'Sorry, this plan does not work yet.',
       kind       => 'mymodule/error',
       issue_code => 'NOT_IMPLEMENTED'
     )
-    fail_plan("Sorry, this plan does not work yet.", 'mymodule/error')
+    fail_plan('Sorry, this plan does not work yet.', 'mymodule/error')
   }
+
+  debug($result)
+  out::message($result.first.value)
 }
