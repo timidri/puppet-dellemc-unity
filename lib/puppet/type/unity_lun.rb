@@ -7,8 +7,10 @@ Puppet::ResourceApi.register_type(
   docs: <<-EOS,
 @summary a Unity lun type
 @example
-lun { 'N-1':
-  ensure => 'present',
+unity_lun { 'mylun':
+  ensure  => 'present',
+  size    => '1GB',
+  pool_id => 'pool_1',
 }
 
 EOS
