@@ -40,14 +40,15 @@ module Puppet::Transport
 
     def unity_post(path, body)
       path = URI.escape(path) if path
-      @api[path].post body.to_json
+      response = @api[path].post(body.to_json)
+      JSON.parse(response.body)['content']
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     end
 
     def unity_delete(path)
       path = URI.escape(path) if path
-      @api[path].delete
+      JSON.parse(@api[path].delete)
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     end
