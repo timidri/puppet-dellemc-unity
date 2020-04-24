@@ -4,7 +4,9 @@ require_relative '../lib/puppet/type/unity_lun'
 task = Puppet::Util::TaskHelper.new('unity')
 result = {}
 
+
 begin
+#  Puppet.debug = true 
   task.params['is_thin_enabled'] = true unless task.params['is_thin_enabled']
 
   result['response'] = task.transport.create_lun(
