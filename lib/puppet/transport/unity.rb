@@ -89,6 +89,21 @@ module Puppet::Transport
       unity_delete("instances/storageResource/#{lun_id}")
     end
 
+    def create_vvol(name, cap_profile_id, size)
+      unity_post('types/storageResource/action/createVVolDatastore', {
+        "name": name,
+        "description": "Created via Bolt",
+        "vvolDatastoreType": 1,
+        "vvolDatastoreCapabilityProfilesParameters": {
+          "addCapabilityProfile": [
+            {
+              "capProfile": { "id": cap_profile_id },
+              "sizeTotal": size
+            }
+          ]
+        }
+      })
+    end
 
     def fields_for_type(type)
       attributes = Puppet::Type.type("unity_#{type}".downcase.to_sym).context.type.attributes
