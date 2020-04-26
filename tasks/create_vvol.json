@@ -1,0 +1,26 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "remote": true,
+  "description": "Create a Unity VMware vVol",
+  "parameters": {
+    "name": {
+      "description": "Name of the vVol",
+      "type": "String[1]"
+    },
+    "cap_profile_id": {
+      "description": "Id of the capability profile to link the vVol to",
+      "type": "String[1]"
+    },
+    "size": {
+      "description": "The size of the vVol",
+      "type": "Integer"
+    }
+  },
+  "files": [
+    "dellemc_unity/lib/puppet/util/task_helper.rb",
+    "dellemc_unity/lib/puppet/transport/unity.rb",
+    "dellemc_unity/lib/puppet/transport/schema/unity.rb",
+    "dellemc_unity/lib/puppet/type/unity_nas.rb"
+  ]
+}
