@@ -7,9 +7,10 @@ result = {}
 begin
   # Puppet.debug = true 
 
-  result['response'] = task.transport.create_vvol(
+  result['response'] = task.transport.create_nfs(
     task.params['name'],
-    task.params['cap_profile_id'],
+    task.params['pool_id'],
+    task.params['nas_id'],
     task.params['size'],
   )
 rescue Exception => e # rubocop:disable Lint/RescueException

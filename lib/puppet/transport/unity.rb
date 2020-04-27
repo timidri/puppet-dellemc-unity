@@ -105,6 +105,29 @@ module Puppet::Transport
       })
     end
 
+    def create_nfs(name, pool_id, nas_id, size)
+      unity_post('types/storageResource/action/createFilesystem', {
+        "name": name,
+        "fsParameters": {
+          "supportedProtocols": 0,
+          "pool": {
+            "id": pool_id
+          },
+          "nasServer": {
+            "id": nas_id
+          },
+          "isThinEnabled": true,
+          "size": size
+        },
+        "nfsShareCreate": [
+          {
+            "name": name,
+            "path": "/"
+          }
+        ]
+      })
+    end
+
     def fields_for_type(type)
       attributes = Puppet::Type.type("unity_#{type}".downcase.to_sym).context.type.attributes
       attributes.values.map { |v| v[:field_name] }
