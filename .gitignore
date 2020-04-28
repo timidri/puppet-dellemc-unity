@@ -28,3 +28,4 @@
 vsa.conf
 devices.conf
 bolt.yaml
+.rerun.json
