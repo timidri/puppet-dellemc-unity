@@ -71,6 +71,7 @@ module Puppet::Transport
     # Request a collection of Unity resources
     # Note: the type needs to be a valid Unity resource type
     def unity_get_collection(type, fields = fields_for_type(type))
+      # require 'pry';binding.pry
       unity_get("types/#{type}/instances", fields: fields.join(',')).map { |item| item['content'] }
     end
 
@@ -84,6 +85,7 @@ module Puppet::Transport
           "isThinEnabled": is_thin_enabled
         },
         "name": name
+        
       })
     end
 
@@ -142,7 +144,8 @@ module Puppet::Transport
     # @summary
     #   Returns device's facts
     def facts(_context)
-      system_info = unity_get_collection('basicSystemInfo')[0]['content']
+      # require 'pry';binding.pry
+      system_info = unity_get_collection('basicSystemInfo',[])[0]
       {
         operatingsystem:      'dellemc_unity',
         model:                system_info['model'],
@@ -159,7 +162,6 @@ module Puppet::Transport
 
     def close(_context)
       # Close connection, free up resources
-      @connection.close
     end
   end
 end
