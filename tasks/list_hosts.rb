@@ -1,12 +1,12 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 require_relative '../lib/puppet/util/task_helper'
 
-class DeleteLunTask < TaskHelper
-  def task(lun_id:, **kwargs)
+class ListHostsTask < TaskHelper
 
+  def task(params)
     result = {}
     begin
-      result['response'] = transport.delete_lun(lun_id)
+      result['hosts'] = transport.unity_get_collection('host')
     rescue Exception => e # rubocop:disable Lint/RescueException
       result[:_error] = { msg: e.message,
                           kind: 'timidri-unity/unknown',
@@ -19,7 +19,7 @@ class DeleteLunTask < TaskHelper
   end
 
   if __FILE__ == $0
-    DeleteLunTask.run
+    ListHostsTask.run
   end
 
 end
