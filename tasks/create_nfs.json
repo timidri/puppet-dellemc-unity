@@ -2,14 +2,18 @@
   "puppet_task_version": 1,
   "supports_noop": false,
   "remote": true,
-  "description": "Create a Unity VMware vVol",
+  "description": "Create a Unity NFS filesystem",
   "parameters": {
     "name": {
-      "description": "Name of the vVol",
+      "description": "Name of the NFS filesystem",
       "type": "String[1]"
     },
-    "cap_profile_id": {
-      "description": "Id of the capability profile to link the vVol to",
+    "pool_id": {
+      "description": "Id of the pool to link the filesystem to",
+      "type": "String[1]"
+    },
+    "nas_id": {
+      "description": "Id of the NAS object to link the filesystem to",
       "type": "String[1]"
     },
     "size": {
