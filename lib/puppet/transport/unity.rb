@@ -1,7 +1,6 @@
 require 'uri'
 require 'json'
 require 'rest-client'
-require 'pry'
 
 module Puppet::Transport
   # The main connection class to a Device endpoint
@@ -69,6 +68,8 @@ module Puppet::Transport
       raise Puppet::ResourceError, "Unable to parse JSON response from Unity API: #{e.inspect}\n#{e.full_message}"
     end
 
+    # Request a collection of Unity resources
+    # Note: the type needs to be a valid Unity resource type
     def unity_get_collection(type, fields = fields_for_type(type))
       unity_get("types/#{type}/instances", fields: fields.join(',')).map { |item| item['content'] }
     end
@@ -129,8 +130,12 @@ module Puppet::Transport
       })
     end
 
+    # Return Unity resource fields for a given Puppet type
     def fields_for_type(type)
-      attributes = Puppet::Type.type("unity_#{type}".downcase.to_sym).context.type.attributes
+      # hack: allow for omitting the "unity_" prefix
+      type = type.downcase
+      type = "unity_#{type}" unless type.start_with?('unity_')
+      attributes = Puppet::Type.type(type.to_sym).context.type.attributes
       attributes.values.map { |v| v[:field_name] }
     end
 

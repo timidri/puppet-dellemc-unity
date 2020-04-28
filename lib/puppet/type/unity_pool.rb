@@ -12,6 +12,7 @@ unity_pool { 'N-1':
 }
 
 EOS
+  unity_resource_type: 'pool',
   features: ['remote_resource'],
   attributes: {
     data_reduction_ratio: {

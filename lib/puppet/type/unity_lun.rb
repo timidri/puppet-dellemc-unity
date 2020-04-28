@@ -14,6 +14,7 @@ unity_lun { 'mylun':
 }
 
 EOS
+  unity_resource_type: 'lun',
   features: ['remote_resource'],
   attributes: {
     id: {

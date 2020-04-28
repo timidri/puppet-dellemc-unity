@@ -12,6 +12,7 @@ unity_nas { 'N-1':
 }
 
 EOS
+  unity_resource_type: 'nasServer',
   features: ['remote_resource'],
   attributes: {
     id: {

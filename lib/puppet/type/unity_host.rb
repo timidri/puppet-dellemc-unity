@@ -12,6 +12,7 @@ unity_host { 'N-1':
 }
 
 EOS
+  unity_resource_type: 'host',
   features: ['remote_resource'],
   attributes: {
     id: {

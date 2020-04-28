@@ -1,24 +1,9 @@
 # frozen_string_literal: true
 
-require 'puppet/resource_api/simple_provider'
+require_relative '../unity_provider'
 
 # Implementation for the unity_lun type using the Resource API.
-class Puppet::Provider::UnityLun::UnityLun < Puppet::ResourceApi::SimpleProvider
-  def get(context)
-    context.debug('getting luns')
-    luns = context.transport.unity_get_collection('lun')
-    instances = []
-    return instances if luns.nil?
-    luns.each do |lun|
-      instance = {}
-      context.type.attributes.each do |k, v|
-        instance[k] = lun[v[:field_name]]
-      end
-      instances << instance
-    end
-
-    instances
-  end
+class Puppet::Provider::UnityLun::UnityLun < Puppet::Provider::UnityProvider
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")

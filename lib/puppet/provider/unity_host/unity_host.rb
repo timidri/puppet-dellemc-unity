@@ -1,25 +1,9 @@
 # frozen_string_literal: true
 
-require 'puppet/resource_api/simple_provider'
+require_relative '../unity_provider'
 
 # Implementation for the unity_host type using the Resource API.
-class Puppet::Provider::UnityHost::UnityHost < Puppet::ResourceApi::SimpleProvider
-  def get(context)
-    context.debug('getting jobs')
-    hosts = context.transport.unity_get_collection('host')
-    instances = []
-    return instances if hosts.nil?
-
-    hosts.each do |host|
-      instance = {}
-      context.type.attributes.each do |k, v|
-        instance[k] = host[v[:field_name]]
-      end
-      instances << instance
-    end
-
-    instances
-  end
+class Puppet::Provider::UnityHost::UnityHost < Puppet::Provider::UnityProvider
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")

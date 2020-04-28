@@ -12,6 +12,7 @@ job { 'N-1':
 }
 
 EOS
+  unity_resource_type: 'job',
   features: ['remote_resource'],
   attributes: {
     id: {

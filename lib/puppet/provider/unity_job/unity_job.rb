@@ -1,26 +1,9 @@
 # frozen_string_literal: true
 
-require 'puppet/resource_api/simple_provider'
-require 'pry'
+require_relative '../unity_provider'
 
 # Implementation for the job type using the Resource API.
-class Puppet::Provider::UnityJob::UnityJob < Puppet::ResourceApi::SimpleProvider
-  def get(context)
-    context.debug('getting jobs')
-    jobs = context.transport.unity_get_collection('job')
-    instances = []
-    return instances if jobs.nil?
-
-    jobs.each do |job|
-      instance = {}
-      context.type.attributes.each do |k, v|
-        instance[k] = job[v[:field_name]]
-      end
-      instances << instance
-    end
-
-    instances
-  end
+class Puppet::Provider::UnityJob::UnityJob < Puppet::Provider::UnityProvider
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")
