@@ -48,7 +48,8 @@ module Puppet::Transport
 
     def unity_delete(path)
       path = URI.escape(path) if path
-      JSON.parse(@api[path].delete)
+      response = @api[path].delete
+      response
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     end
