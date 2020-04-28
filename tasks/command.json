@@ -1,0 +1,30 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "remote": true,
+  "description": "Simple command shim for making Unity API calls ",
+  "parameters": {
+    "command": {
+      "description": "Name of the LUN",
+      "type": "String[1]"
+    },
+    "endpoint": {
+      "description": "Id of the pool to create the LUN on",
+      "type": "String[1]"
+    },
+    "parameters": {
+      "description": "Size of the LUN in bytes",
+      "type": "Optional[Hash]"
+    },
+    "body": {
+      "description": "Whether thin provisioning is enabled",
+      "type": "Optional[Hash]"
+    }
+  },
+  "files": [
+    "dellemc_unity/lib/puppet/util/task_helper.rb",
+    "dellemc_unity/lib/puppet/transport/unity.rb",
+    "dellemc_unity/lib/puppet/transport/schema/unity.rb",
+    "dellemc_unity/lib/puppet/type/unity_pool.rb"
+  ]
+}
