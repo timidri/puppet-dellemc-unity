@@ -33,5 +33,5 @@ plan dellemc_unity::create_lun(
   }
 
   debug($result)
-  out::message($result.first.value)
+  out::message(String($result.first.value, '%h'))
 }
