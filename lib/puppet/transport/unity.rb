@@ -61,7 +61,7 @@ module Puppet::Transport
                args.merge(compact: true)
              end
       result = @api[path].get params: params
-      JSON.parse(result.body)['entries']
+      JSON.parse(result.body)['entries'].nil? ? JSON.parse(result.body) : JSON.parse(result.body)['entries']
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     rescue JSON::ParserError => e
