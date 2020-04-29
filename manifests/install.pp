@@ -4,7 +4,7 @@
 #   include dellemc_unity::install
 #
 class dellemc_unity::install() {
-  $packages = ['rubygems', 'ruby-dev']
+  $packages = ['rubygems', 'ruby-devel']
 
   package { $packages:
     ensure => present,
@@ -13,6 +13,6 @@ class dellemc_unity::install() {
   package { 'rest-client':
     ensure   => 'latest',
     provider => 'gem',
-    require  => Package['rubygems'],
+    require  => Package[$packages],
   }
 }
