@@ -68,10 +68,10 @@ plan dellemc_unity::nas_wizard(
 
   run_task('dellemc_unity::create_nfs', $targets, {
     name     => $name,
-    pool_id => $_pool_id,
+    pool_id  => $_pool_id,
     nas_id   => $nas_id,
-    size     => $_size,
+    size     => $_size.to_bytes,
   })
 
-  out::message("Created NFSv3 enabled NAS of size ${format_bytes($_size)} mountable at ${ipaddress}:/${name}")
+  out::message("Created NFSv3 enabled NAS of size ${format_bytes($_size.to_bytes)} mountable at ${ipaddress}:/${name}")
 }
