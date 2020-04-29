@@ -1,6 +1,5 @@
 require 'puppet'
 require 'json'
-require 'pry'
 
 # Sets up the transport for a remote task
 class TaskHelper

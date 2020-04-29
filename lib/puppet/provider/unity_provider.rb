@@ -18,12 +18,46 @@ class Puppet::Provider::UnityProvider < Puppet::ResourceApi::SimpleProvider
     collection.each do |item|
       instance = {}
       context.type.attributes.each do |k, v|
-        instance[k] = item[v[:field_name]]
+        if k == :ensure 
+          instance[k] = 'present'
+        else
+          instance[k] = item[v[:field_name]]
+        end
       end
       instances << instance
     end
 
     instances
+  end
+
+  def create(context, name, should)
+    context.notice("Creating '#{name}' with #{should.inspect}")
+    unity_resource_type = context.type.definition[:unity_resource_type]
+    context.transport.unity_post("types/#{unity_resource_type}/instances", body_from_should(should, context))
+  end
+
+  def update(context, name, should)
+    # require 'pry';binding.pry
+    context.notice("Updating '#{name}' with #{should.inspect}")
+    unity_resource_type = context.type.definition[:unity_resource_type]
+    context.transport.unity_post("instances/#{unity_resource_type}/name:#{name}/action/modify", 
+      body_from_should(should, context))
+  end
+
+  def delete(context, name)
+    # require 'pry';binding.pry
+    context.notice("Deleting '#{name}'")
+    unity_resource_type = context.type.definition[:unity_resource_type]
+    context.transport.unity_delete("instances/#{unity_resource_type}/name:#{name}")
+  end
+
+  def body_from_should(should, context)
+    # require 'pry';binding.pry
+    body = {}
+    should.each do |k,v|
+      body[context.type.attributes[k][:field_name]] = v unless k == :ensure
+    end
+    body
   end
 
 end

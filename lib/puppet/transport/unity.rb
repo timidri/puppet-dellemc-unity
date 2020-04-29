@@ -40,7 +40,7 @@ module Puppet::Transport
     def unity_post(path, body)
       path = URI.escape(path) if path
       response = @api[path].post(body.to_json)
-      JSON.parse(response.body)['content']
+      response
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     end
@@ -85,7 +85,7 @@ module Puppet::Transport
           "isThinEnabled": is_thin_enabled
         },
         "name": name
-        
+
       })
     end
 
@@ -135,10 +135,11 @@ module Puppet::Transport
     # Return Unity resource fields for a given Puppet type
     def fields_for_type(type)
       # hack: allow for omitting the "unity_" prefix
+      # require 'pry';binding.pry
       type = type.downcase
       type = "unity_#{type}" unless type.start_with?('unity_')
       attributes = Puppet::Type.type(type.to_sym).context.type.attributes
-      attributes.values.map { |v| v[:field_name] }
+      attributes.values.map { |v| v[:field_name] }.select { |f| !f.nil? }
     end
 
     # @summary
@@ -147,12 +148,12 @@ module Puppet::Transport
       # require 'pry';binding.pry
       system_info = unity_get_collection('basicSystemInfo',[])[0]
       {
-        operatingsystem:      'dellemc_unity',
-        model:                system_info['model'],
-        name:                 system_info['name'],
-        software_version:     system_info['softwareVersion'],
-        api_version:          system_info['apiVersion'],
-        earliest_api_version: system_info['earliestApiVersion'],
+        "operatingsystem"      => 'dellemc_unity',
+        "device_model"         => system_info['model'],
+        "device_name"          => system_info['name'],
+        "software_version"     => system_info['softwareVersion'],
+        "api_version"          => system_info['apiVersion'],
+        "earliest_api_version" => system_info['earliestApiVersion'],
       }
     end
 
