@@ -12,7 +12,7 @@ class CommandTask < TaskHelper
       when 'get'
         result['response'] = transport.unity_get(endpoint, parameters)
       when 'post'
-        result['response'] = transport.unity_post(endpoint, body)
+        result['response'] = JSON.parse(transport.unity_post(endpoint, body).body)
       when 'delete'
         result['response'] = transport.unity_delete(endpoint)
       else
