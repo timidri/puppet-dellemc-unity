@@ -1,7 +1,6 @@
 #
 # to_bytes.rb
 #
-require 'pry'
 Puppet::Functions.create_function(:'to_bytes') do
   # Converts the argument into bytes, for example 4 kB becomes 4096.
   # @param arg The string containing a byte size
