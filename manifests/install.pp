@@ -4,7 +4,8 @@
 #   include dellemc_unity::install
 #
 class dellemc_unity::install() {
-  $packages = ['rubygems', 'ruby-devel']
+  # note: tested on CentOS 7 only
+  $packages = ['rubygems', 'ruby-devel', 'gcc', 'gcc-c++']
 
   package { $packages:
     ensure => present,
