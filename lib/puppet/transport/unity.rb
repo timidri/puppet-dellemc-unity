@@ -61,7 +61,9 @@ module Puppet::Transport
                args.merge(compact: true)
              end
       result = @api[path].get params: params
-      JSON.parse(result.body)['entries'].nil? ? JSON.parse(result.body) : JSON.parse(result.body)['entries']
+      body = JSON.parse(result.body)
+      # When returning a single resource via the API the response does not contain the "entries" key
+      body['entries'].nil? ? body : body['entries']
     rescue RestClient::ExceptionWithResponse => e
       raise Puppet::ResourceError, "Unity error: #{e}, message: \"#{JSON.parse(e.response.body)['error']['messages'].map { |m| m['en-US'] }.join(';')}\""
     rescue JSON::ParserError => e
@@ -122,7 +124,8 @@ module Puppet::Transport
     end
 
     def create_nfs(name, pool_id, nas_id, size)
-      unity_post('types/storageResource/action/createFilesystem', {
+      # It's useful to parse the JSON so Bolt prints it pretty
+      JSON.parse(unity_post('types/storageResource/action/createFilesystem', {
         "name": name,
         "fsParameters": {
           "supportedProtocols": 0,
@@ -141,7 +144,7 @@ module Puppet::Transport
             "path": "/"
           }
         ]
-      })
+      }).body)
     end
 
     # Return Unity resource fields for a given Puppet type
