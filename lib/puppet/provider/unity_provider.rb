@@ -32,30 +32,33 @@ class Puppet::Provider::UnityProvider < Puppet::ResourceApi::SimpleProvider
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_post("types/#{unity_resource_type}/instances", body_from_should(should, context))
+    type = context.type.definition[:unity_resource_type]
+    context.transport.unity_create_instance(type, body_from_should(should, context))
   end
 
   def update(context, name, should)
     # require 'pry';binding.pry
     context.notice("Updating '#{name}' with #{should.inspect}")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_post("instances/#{unity_resource_type}/name:#{name}/action/modify", 
-      body_from_should(should, context))
+    type = context.type.definition[:unity_resource_type]
+    context.transport.unity_update_instance(type, name, 
+      body_from_should(should, context, :updating))
   end
 
   def delete(context, name)
     # require 'pry';binding.pry
     context.notice("Deleting '#{name}'")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_delete("instances/#{unity_resource_type}/name:#{name}")
+    type = context.type.definition[:unity_resource_type]
+    context.transport.unity_delete_instance(type, name)
   end
 
-  def body_from_should(should, context)
-    # require 'pry';binding.pry
+  def body_from_should(should, context, operation) 
     body = {}
+    attrs = context.type.attributes
     should.each do |k,v|
-      body[context.type.attributes[k][:field_name]] = v unless k == :ensure
+      body[attrs[k][:field_name]] = v unless 
+          # require 'pry';binding.pry
+          k == :ensure || 
+          (operation == :updating && attrs[k][:behaviour] == :init_only)
     end
     body
   end
