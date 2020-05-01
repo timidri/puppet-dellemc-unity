@@ -2,6 +2,7 @@ plan dellemc_unity::create_lun(
   TargetSpec        $targets,
   String[1]         $name,
   Optional[String]  $pool_id = undef,
+  Optional[String]  $description = undef,
   Pattern[/[0-9]+[MGT]i?[Bb]?$/, /[0-9]+$/] $size,
   Optional[Boolean] $is_thin_enabled = true,
   ) {
@@ -18,6 +19,7 @@ plan dellemc_unity::create_lun(
 
   $result = run_task('dellemc_unity::create_lun', $targets, {
     name            => $name,
+    description     => $description,
     pool_id         => $_pool_id,
     size            => $size.to_bytes,
     is_thin_enabled => $is_thin_enabled,

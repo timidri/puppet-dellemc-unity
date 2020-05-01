@@ -3,11 +3,11 @@ require_relative '../lib/puppet/util/task_helper'
 
 class CreateLunTask < TaskHelper
 
-  def task(name:, pool_id:, size:, is_thin_enabled: true, **kwargs)
+  def task(name:, description:nil, pool_id:, size:, is_thin_enabled: true, **kwargs)
     result = {}
 
     begin
-      result['response'] = transport.create_lun(name, pool_id, size, is_thin_enabled)
+      result['response'] = transport.create_lun(name, description, pool_id, size, is_thin_enabled)
     rescue Exception => e # rubocop:disable Lint/RescueException
       result[:_error] = { msg: e.message,
                           kind: 'timidri-unity/unknown',

@@ -88,7 +88,7 @@ module Puppet::Transport
       unity_delete("instances/#{type}/name:#{name}")
     end
 
-    def create_lun(name, pool_id, size, is_thin_enabled)
+    def create_lun(name, description, pool_id, size, is_thin_enabled)
       unity_post('types/storageResource/action/createLun', {
         "lunParameters": {
           "pool": {
@@ -97,8 +97,8 @@ module Puppet::Transport
           "size": size,
           "isThinEnabled": is_thin_enabled
         },
-        "name": name
-
+        "name": name,
+        "description": description
       })
     end
 

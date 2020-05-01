@@ -8,6 +8,10 @@
       "description": "Name of the LUN",
       "type": "String[1]"
     },
+    "description": {
+      "description": "Description of the LUN",
+      "type": "Optional[String]"
+    },
     "pool_id": {
       "description": "Id of the pool to create the LUN on",
       "type": "String[1]"
