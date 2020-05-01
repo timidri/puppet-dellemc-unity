@@ -3,6 +3,11 @@ require 'puppet/resource_api/simple_provider'
 # A base provider for all PANOS providers
 class Puppet::Provider::UnityProvider < Puppet::ResourceApi::SimpleProvider
 
+  # def set(context, changes)
+  #   @changes = changes
+  #   super
+  # end
+
   def get(context)
     # get unity resource type name from the type definition
     unity_resource_type = context.type.definition[:unity_resource_type]
@@ -32,30 +37,37 @@ class Puppet::Provider::UnityProvider < Puppet::ResourceApi::SimpleProvider
 
   def create(context, name, should)
     context.notice("Creating '#{name}' with #{should.inspect}")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_post("types/#{unity_resource_type}/instances", body_from_should(should, context))
+    type = context.type.definition[:unity_resource_type_cud] || context.type.definition[:unity_resource_type]
+    endpoint = context.type.definition[:create_endpoint] || "types/#{type}/instances"
+    endpoint = endpoint.% type: type, name: name
+    context.transport.unity_post(endpoint, body_from_should(context, should))
   end
 
   def update(context, name, should)
     # require 'pry';binding.pry
     context.notice("Updating '#{name}' with #{should.inspect}")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_post("instances/#{unity_resource_type}/name:#{name}/action/modify", 
-      body_from_should(should, context))
+    type = context.type.definition[:unity_resource_type_cud] || context.type.definition[:unity_resource_type]
+    endpoint = context.type.definition[:update_endpoint] || "instances/#{type}/name:#{name}/action/modify"
+    endpoint = endpoint.% type: type, name: name
+    context.transport.unity_post(endpoint, body_from_should(context, should, true))
   end
 
   def delete(context, name)
     # require 'pry';binding.pry
     context.notice("Deleting '#{name}'")
-    unity_resource_type = context.type.definition[:unity_resource_type]
-    context.transport.unity_delete("instances/#{unity_resource_type}/name:#{name}")
+    type = context.type.definition[:unity_resource_type_cud] || context.type.definition[:unity_resource_type]
+    endpoint = context.type.definition[:delete_endpoint] || "instances/#{type}/name:#{name}"
+    endpoint = endpoint.% type: type, name: name
+    context.transport.unity_post(endpoint, name)
   end
 
-  def body_from_should(should, context)
-    # require 'pry';binding.pry
+  def body_from_should(context, should, prune_init_only=false) 
     body = {}
+    attrs = context.type.attributes
     should.each do |k,v|
-      body[context.type.attributes[k][:field_name]] = v unless k == :ensure
+      next if k == :ensure
+      next if prune_init_only && attrs[k][:behaviour] == :init_only
+      body[attrs[k][:field_name]] = v 
     end
     body
   end

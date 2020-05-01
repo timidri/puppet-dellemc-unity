@@ -73,8 +73,19 @@ module Puppet::Transport
     # Request a collection of Unity resources
     # Note: the type needs to be a valid Unity resource type
     def unity_get_collection(type, fields = fields_for_type(type))
-      # require 'pry';binding.pry
       unity_get("types/#{type}/instances", fields: fields.join(',')).map { |item| item['content'] }
+    end
+
+    def unity_create_instance(type, body)
+      unity_post("types/#{type}/instances", body)
+    end
+
+    def unity_update_instance(type, name, body)
+      unity_post("instances/#{type}/name:#{name}/action/modify", body)
+    end
+
+    def unity_delete_instance(type, name)
+      unity_delete("instances/#{type}/name:#{name}")
     end
 
     def create_lun(name, pool_id, size, is_thin_enabled)

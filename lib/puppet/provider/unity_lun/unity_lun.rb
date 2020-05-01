@@ -5,15 +5,26 @@ require_relative '../unity_provider'
 # Implementation for the unity_lun type using the Resource API.
 class Puppet::Provider::UnityLun::UnityLun < Puppet::Provider::UnityProvider
 
-  def create(context, name, should)
-    context.notice("Creating '#{name}' with #{should.inspect}")
+
+  def body_from_should(context, should, prune_init_only=false) 
+    body = {}
+    attrs = context.type.attributes
+    should.each do |k,v|
+      next if [:ensure, :pool, :size_total, :is_thin_enabled].include? k
+      next if prune_init_only && attrs[k][:behaviour] == :init_only
+      body[attrs[k][:field_name]] = v 
+    end
+    body[:lunParameters] = {
+        size: should[:size_total],
+      }
+    # require 'pry';binding.pry
+
+    if ! prune_init_only
+      body[:lunParameters][:pool] = should[:pool]
+      body[:lunParameters][:isThinEnabled] = should[:is_thin_enabled]
+    end
+
+    body
   end
 
-  def update(context, name, should)
-    context.notice("Updating '#{name}' with #{should.inspect}")
-  end
-
-  def delete(context, name)
-    context.notice("Deleting '#{name}'")
-  end
 end
