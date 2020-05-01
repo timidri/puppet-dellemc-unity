@@ -3,10 +3,10 @@ require 'puppet/resource_api/simple_provider'
 # A base provider for all PANOS providers
 class Puppet::Provider::UnityProvider < Puppet::ResourceApi::SimpleProvider
 
-  def set(context, changes)
-    @changes = changes
-    super.set(context, changes)
-  end
+  # def set(context, changes)
+  #   @changes = changes
+  #   super
+  # end
 
   def get(context)
     # get unity resource type name from the type definition
