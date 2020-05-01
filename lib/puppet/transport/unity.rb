@@ -38,7 +38,7 @@ module Puppet::Transport
     end
 
     def unity_post(path, body)
-      path = URI.escape(path) if path
+      path = URI.escape("#{path}?compact=true") if path
       response = @api[path].post(body.to_json)
       response
     rescue RestClient::ExceptionWithResponse => e
@@ -46,7 +46,7 @@ module Puppet::Transport
     end
 
     def unity_delete(path)
-      path = URI.escape(path) if path
+      path = URI.escape("#{path}?compact=true") if path
       response = @api[path].delete
       response
     rescue RestClient::ExceptionWithResponse => e
@@ -55,10 +55,10 @@ module Puppet::Transport
 
     def unity_get(path, params = nil)
       path = URI.escape(path) if path
-      args = if args.nil?
+      params = if params.nil?
                { compact: true }
              else
-               args.merge(compact: true)
+              params.merge(compact: true)
              end
       result = @api[path].get params: params
       body = JSON.parse(result.body)
