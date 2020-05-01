@@ -73,7 +73,6 @@ module Puppet::Transport
     # Request a collection of Unity resources
     # Note: the type needs to be a valid Unity resource type
     def unity_get_collection(type, fields = fields_for_type(type))
-      # require 'pry';binding.pry
       unity_get("types/#{type}/instances", fields: fields.join(',')).map { |item| item['content'] }
     end
 
