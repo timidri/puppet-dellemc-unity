@@ -13,7 +13,7 @@ class dellemc_unity::install() {
 
   package { 'rest-client':
     ensure   => 'latest',
-    provider => 'gem',
+    provider => 'puppet_gem',
     require  => Package[$packages],
   }
 }
