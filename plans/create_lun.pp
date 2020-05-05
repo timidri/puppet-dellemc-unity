@@ -34,6 +34,6 @@ plan dellemc_unity::create_lun(
     fail_plan('Sorry, this plan does not work yet.', 'mymodule/error')
   }
 
-  debug($result)
   out::message(String($result.first.value, '%h'))
+  run_plan('dellemc_unity::list_luns', $targets)
 }
